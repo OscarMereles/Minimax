@@ -30,6 +30,14 @@ def capturar_opcion():
         mostrar_menu()
         opcion_elegida=capturar_opcion()
 
+def validar_nro(numero):
+    if numero.isdigit():
+        return int(numero)
+    else:
+        return False
+
+
+
 def enviar_a_pantalla(eleccion):
     if eleccion==1:
         print("")    #añadir direccion al juego
@@ -38,7 +46,8 @@ def enviar_a_pantalla(eleccion):
         ancho=input("Ancho del mapa: ")
         alto=input("Alto del mapa: ")
         obstaculos=input("Obstaculos del mapa: ")
-
+        validar_nro(ancho)
+    
 
 
 
