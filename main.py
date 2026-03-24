@@ -1,7 +1,7 @@
 import sys, os, time
 
 def bienvenida():
-    print("Bienvenid@")
+    print("Bienvenid@ al juego del gato y el raton")
 
 def mostrar_menu():
     print("______________________________")
@@ -31,10 +31,19 @@ def capturar_opcion():
         opcion_elegida=capturar_opcion()
 
 def enviar_a_pantalla(eleccion):
-    print("")
+    if eleccion==1:
+        print("")    #añadir direccion al juego
+    elif eleccion==2:
+        print("-----------Opciones------------")
+        ancho=input("Ancho del mapa: ")
+        alto=input("Alto del mapa: ")
+        obstaculos=input("Obstaculos del mapa: ")
+
+
+
 
 bienvenida()
-time.sleep(6)
+time.sleep(3)
 mostrar_menu()
 opcion_elegida=capturar_opcion()
 pantalla_destino=enviar_a_pantalla(opcion_elegida)
