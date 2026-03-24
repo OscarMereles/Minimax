@@ -1,27 +1,36 @@
-import random
+import random, os, sys
 mapa=[]
 
-def matriz(dimensionx,dimensiony,obstaculo,mapa):
-    pantalla=""
+def crear_matriz(dimensionx,dimensiony,obstaculo,mapa):
+    
+
     for i in range(dimensionx): #dibuja mapa desde una matriz con obstaculos opcionales
-        columna=[]
+        fila=[]
         if obstaculo==True:  
             for j in range(dimensiony):
                 aleatorio=random.randint(1,5)
-                if aleatorio ==3:
-                    columna.append("|⬛|")#obstaculo
+                if aleatorio ==1:
+                    fila.append("|⬛|")#obstaculo
                 else:
-                    columna.append("|  |")#celda vacia
+                    fila.append("|__|")#celda vacia
         else:
             for j in range(dimensiony):
-                columna.append("|  |")#celda vacia
-        mapa.append(columna)
-    #print(columna,i)
+                fila.append("|__|")#celda vacia
+        mapa.append(fila)
+
+def imprimir_mapa(dimensionx,dimensiony,mapa):
+    pantalla=""
+    os.system('cls')
     for x in range(dimensionx):
         for y in range(dimensiony):
-            pantalla=pantalla+mapa[x][y]
+            pantalla=pantalla+mapa[x][y]    
         print(pantalla)
         pantalla=""
 
+def prueba():
+    os.system('cls')
+    crear_matriz(10,10,True,mapa)
+    imprimir_mapa(10,10,True,mapa)
 
-matriz(10,10,True,mapa)
+#prueba()
+#sys.exit("fin")
