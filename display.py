@@ -2,13 +2,14 @@ import random
 filas=[]
 
 def matriz(dimensionx,dimensiony,obstaculo,filas):
-    for i in range(dimensionx): #
+    pantalla=""
+    for i in range(dimensionx): #dibuja mapa desde una matriz con obstaculos opcionales
         columna=[]
         if obstaculo==True:  
             for j in range(dimensiony):
                 aleatorio=random.randint(1,5)
                 if aleatorio ==3:
-                    columna.append("|⚫|")#obstaculo
+                    columna.append("|⬛|")#obstaculo
                 else:
                     columna.append("|  |")#celda vacia
         else:
@@ -17,7 +18,10 @@ def matriz(dimensionx,dimensiony,obstaculo,filas):
         filas.append(columna)
     #print(columna,i)
     for x in range(dimensionx):
-        print(filas[x])
+        for y in range(dimensiony):
+            pantalla=pantalla+filas[x][y]
+        print(pantalla)
+        pantalla=""
 
 
-matriz(4,4,True,filas)
+matriz(10,10,True,filas)
