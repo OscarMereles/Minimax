@@ -1,7 +1,7 @@
 import random
-filas=[]
+mapa=[]
 
-def matriz(dimensionx,dimensiony,obstaculo,filas):
+def matriz(dimensionx,dimensiony,obstaculo,mapa):
     pantalla=""
     for i in range(dimensionx): #dibuja mapa desde una matriz con obstaculos opcionales
         columna=[]
@@ -15,13 +15,13 @@ def matriz(dimensionx,dimensiony,obstaculo,filas):
         else:
             for j in range(dimensiony):
                 columna.append("|  |")#celda vacia
-        filas.append(columna)
+        mapa.append(columna)
     #print(columna,i)
     for x in range(dimensionx):
         for y in range(dimensiony):
-            pantalla=pantalla+filas[x][y]
+            pantalla=pantalla+mapa[x][y]
         print(pantalla)
         pantalla=""
 
 
-matriz(10,10,True,filas)
+matriz(10,10,True,mapa)
