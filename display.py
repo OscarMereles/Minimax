@@ -8,7 +8,7 @@ def crear_matriz(dimensionx,dimensiony,obstaculo,mapa):
         fila=[]
         if obstaculo==True:  
             for j in range(dimensiony):
-                aleatorio=random.randint(1,5)
+                aleatorio=random.randint(1,4)
                 if aleatorio ==1:
                     fila.append("|⬛|")#obstaculo
                 else:
