@@ -8,7 +8,7 @@ def mostrar_menu():
     print("|          🐱JUGAR (1)       |")
     print("______________________________")
     print("______________________________")
-    print("|         🐭OPCIONES (2)     |")
+    print("| 🐭PARTIDA PERSONALIZADA (2)|")
     print("______________________________")
     print("______________________________")
     print("|          🧀SALIR (3)       |")
