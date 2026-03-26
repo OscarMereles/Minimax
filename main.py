@@ -1,8 +1,6 @@
 import sys, os, time
-
 def bienvenida():
     print("Bienvenid@ al juego del gato y el raton")
-
 def mostrar_menu():
     print("______________________________")
     print("|          🐱JUGAR (1)       |")
@@ -13,11 +11,9 @@ def mostrar_menu():
     print("______________________________")
     print("|          🧀SALIR (3)       |")
     print("______________________________")
-
 def capturar_opcion():
     opcion=input("Ingrese opción: ")
     if opcion=="1" or opcion.lower()=="jugar":
-        
         return 1
     elif opcion=="2" or opcion.lower()=="opciones":
         return 2
@@ -29,15 +25,11 @@ def capturar_opcion():
         print("Error, opcion invalida")
         mostrar_menu()
         opcion_elegida=capturar_opcion()
-
 def validar_nro(numero):
     if numero.isdigit():
         return int(numero)
     else:
         return False
-
-
-
 def enviar_a_pantalla(eleccion):
     if eleccion==1:
         print("")    #añadir direccion al juego
@@ -47,10 +39,6 @@ def enviar_a_pantalla(eleccion):
         alto=input("Alto del mapa: ")
         obstaculos=input("Obstaculos del mapa: ")
         validar_nro(ancho)
-    
-
-
-
 bienvenida()
 time.sleep(3)
 mostrar_menu()
