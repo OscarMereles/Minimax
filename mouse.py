@@ -8,9 +8,8 @@ cord_obts=[]
 celda_spawn_raton=[]
 celda_spawn_queso=[]
 distancia_raton_queso=0
-distancia_a_gato=int(0.75*(x+y)/2)
+distancia_a_gato=int(0.7*(x+y)/2)
 distancia_de_plantado=int(distancia_a_gato/2)
-
 
 def visualizar_mapa():
     espacio_libre=0
@@ -33,8 +32,7 @@ def spawn_mickey(libres,celda_spawn_raton):
     celda_spawn_raton=libres[aleatorio]
     mapa[celda_spawn_raton[0]][celda_spawn_raton[1]]="|🐭|"
     return celda_spawn_raton
-
-def plantar_queso(libres,celda_spawn_queso):
+def plantar_queso(libres,celda_spawn_queso,):
     aleatorio=random.randint(0,len(libres)-1)
     celda_spawn_queso=libres[aleatorio]
     mapa[celda_spawn_queso[0]][celda_spawn_queso[1]]="|🧀|"
@@ -48,8 +46,6 @@ def medir_distancia():
     else:
         distancia_raton_queso=distanciay
     #print("distancia raton-queso: ",distancia_raton_queso," pasos")
-    
-
 
 crear_matriz(x,y,True,mapa)
 visualizar_mapa()
