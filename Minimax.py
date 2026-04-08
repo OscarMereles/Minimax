@@ -33,7 +33,6 @@ def mostrar_tablero(x_de_tablero,y_de_tablero,tablero): #funcion que muestra el 
         cadena=""   #se vuelve a limpiar la cadena para la proxima fila
         
 def validar_movimiento(x, y, tablero):      #funcion de validacion de movimientos, recibe coordenadas en x y en y, ademas del tablero con el que trabaja
-    #return 0 <= x < len(tablero) and 0 <= y < len(tablero[0]) and tablero[x][y] != "|####|"
     return 0 <= x < len(tablero) and 0 <= y < len(tablero[0]) and tablero[x][y] != "|⬛|"    #si se da que las coordenadas estan dentro del tablero y la coordenada no tiene un obstaculo es verdadero el retorno
 
 def obtener_movimientos_validos(x, y, tablero):     #funcion que obtiene movimientos validos desde una coordenada, recibe coordenadas en x y en y, ademas del tablero con el que trabaja
@@ -47,8 +46,7 @@ def obtener_movimientos_validos(x, y, tablero):     #funcion que obtiene movimie
     return movimientos      #se retorna la lista del listas de movimientos validos
 
 def distancia_chebyshev(punto_a,punto_b):       #se define la funcion que mide la distancia adaptada para movimiento en diagonales, horizontales y verticales
-    distancia=max(abs(punto_a[0]-punto_b[0]),abs(punto_a[1]-punto_b[1]))    #almacena en la variable distancia el mayor valor ya sea de la diferencia postiva de las coordenadas en x o en y
-    return distancia        #retorna la distancia chebyshev
+    return max(abs(punto_a[0]-punto_b[0]),abs(punto_a[1]-punto_b[1]))        #retorna la distancia chebyshev:el mayor valor ya sea de la diferencia postiva de las coordenadas en x o en y
 
 def movimiento_random(animal,coord,tablero):    #funcion experimental para generar movimientos aleatorios, recibe el animal que lo usa, su coordenada, y el tablero en el que trabaja
     if obtener_movimientos_validos(coord[0],coord[1],tablero)!= None:       #si puede obtener movimientos validos desde la coordenada actual
@@ -60,155 +58,132 @@ def movimiento_random(animal,coord,tablero):    #funcion experimental para gener
     else:                                                                   #en caso que no haya movimientos disponibles desde esa coordenada 
         print("sin movimientos disponibles")                                #imprime mensaje de sin movimientos disponibles
 
-def evaluar_raton(coord_raton,coord_queso, coord_gato, coord_salida,tablero):
-    distancia_gato= distancia_chebyshev(coord_gato,coord_raton)
-    distancia_queso=distancia_chebyshev(coord_queso,coord_raton)
-    distancia_salida=distancia_chebyshev(coord_salida,coord_raton)
-    if tablero[coord_queso[0]][coord_queso[1]]=="|🧀|":
-        puntaje=(distancia_gato*25)-(distancia_queso*5)-(distancia_salida*10)
+def evaluar_raton(coord_raton, coord_queso, coord_gato, coord_salida, tablero):
+    dist_gato = distancia_chebyshev(coord_raton, coord_gato)
+    dist_queso = distancia_chebyshev(coord_raton, coord_queso)
+    dist_salida = distancia_chebyshev(coord_raton, coord_salida)
+    
+    if tablero[coord_queso[0]][coord_queso[1]] == "|🧀|":
+        return (dist_gato * 25) - (dist_queso * 5) - (dist_salida * 12)
     else:
-        puntaje=(distancia_gato*25)-(distancia_salida*30)
-    return puntaje
+        return (dist_gato * 25) - (dist_salida * 38)
 
-def evaluar_gato(coord_gato, coord_raton,coord_queso,coord_salida):
-    distancia_raton=distancia_chebyshev(coord_raton,coord_gato)
-    distancia_queso=distancia_chebyshev(coord_gato,coord_queso)
-    distancia_salida=distancia_chebyshev(coord_salida,coord_gato)
-    if tablero[coord_queso[0]][coord_queso[1]]=="|🧀|":
-        puntaje=(distancia_raton*25)-(distancia_queso*5)-(distancia_salida*15)
+def evaluar_gato(coord_gato, coord_raton, coord_queso, coord_salida, tablero):
+    dist_raton = distancia_chebyshev(coord_gato, coord_raton)
+    dist_queso = distancia_chebyshev(coord_gato, coord_queso)
+    dist_salida = distancia_chebyshev(coord_gato, coord_salida)
+    
+    if tablero[coord_queso[0]][coord_queso[1]] == "|🧀|":
+        return (dist_raton * 26) - (dist_queso * 8) - (dist_salida * 10)
     else:
-        puntaje=(distancia_raton*25)-(distancia_salida*20)
-    #puntaje=-distancia_raton*12-distancia_queso-distancia_salida
-    return puntaje
+        return (dist_raton * 26) - (dist_salida * 18)
 
 def juego_terminado(coord_raton, coord_gato, coord_salida):
     if coord_gato==coord_raton:
-        return True
+        return True, "gato"
     if coord_raton== coord_salida:
-        return True
-    return False
+        return True, "raton"
+    return False, None
 
 def minimax(tablero, coord_raton, coord_gato, coord_queso, coord_salida, profundidad, turno_raton):
-    # Condición de parada
-    if profundidad == 0 or juego_terminado(coord_raton, coord_gato, coord_salida):
+    terminado, ganador = juego_terminado(coord_raton, coord_gato, coord_salida)
+    
+    if profundidad == 0 or terminado:
+        if terminado and ganador == "gato":
+            return -10000, None
+        if terminado and ganador == "raton":
+            return 10000, None
         if turno_raton:
             return evaluar_raton(coord_raton, coord_queso, coord_gato, coord_salida, tablero), None
         else:
-            return evaluar_gato(coord_gato, coord_raton, coord_queso, coord_salida), None
+            return evaluar_gato(coord_gato, coord_raton, coord_queso, coord_salida, tablero), None
 
-    # Crear una copia profunda del tablero para esta simulación
-    tablero_copia = copy.deepcopy(tablero)
-
-    if turno_raton:  # Turno del Ratón (jugador que maximiza)
-        mejores_movimientos = []
+    if turno_raton:
         mejor_puntaje = float('-inf')
         mejor_movimiento = None
+        movimientos = obtener_movimientos_validos(coord_raton[0], coord_raton[1], tablero)
 
-        movimientos = obtener_movimientos_validos(coord_raton[0], coord_raton[1], tablero_copia)
-        
-        if not movimientos:  # Si no hay movimientos válidos
-            return evaluar_raton(coord_raton, coord_queso, coord_gato, coord_salida, tablero_copia), None
         for mov in movimientos:
-            nueva_pos = mov[:]  # [nx, ny]
-
-            # Simular el movimiento en la copia
+            tablero_copia = copy.deepcopy(tablero)
             tablero_copia[coord_raton[0]][coord_raton[1]] = "|__|"
-            tablero_copia[nueva_pos[0]][nueva_pos[1]] = "|🐭|"
-
-            # Llamada recursiva
-            puntaje, _ = minimax(tablero_copia, nueva_pos, coord_gato, coord_queso, coord_salida, profundidad - 1, False)
-
+            tablero_copia[mov[0]][mov[1]] = "|🐭|"
+            
+            puntaje, _ = minimax(tablero_copia, mov, coord_gato, coord_queso, coord_salida, profundidad-1, False)
+            
             if puntaje > mejor_puntaje:
                 mejor_puntaje = puntaje
-                mejores_movimientos = [mov]
-            elif puntaje==mejor_puntaje:
-                mejores_movimientos.append(mov)
-            if mejores_movimientos:
-                mejor_movimiento = random.choice(mejores_movimientos)
-            else:
-                mejor_movimiento= None
-        return mejor_puntaje, mejor_movimiento
-    
-    else:  # Turno del Gato (jugador que minimiza)
-        mejor_puntaje = float('inf')
-        mejor_movimiento = None
-
-        movimientos = obtener_movimientos_validos(coord_gato[0], coord_gato[1], tablero_copia)
-        
-        if not movimientos:  # Si no hay movimientos válidos
-            return evaluar_gato(coord_gato, coord_raton, coord_queso, coord_salida), None
-
-        for mov in movimientos:
-            nueva_pos = mov[:]
-
-            # Simular el movimiento en la copia
-            tablero_copia[coord_gato[0]][coord_gato[1]] = "|__|"
-            tablero_copia[nueva_pos[0]][nueva_pos[1]] = "|🐱|"
-
-            # Llamada recursiva
-            puntaje, _ = minimax(tablero_copia, coord_raton, nueva_pos, coord_queso, coord_salida, profundidad - 1, True)
-
-            if puntaje < mejor_puntaje:
-                mejor_puntaje = puntaje
+                mejor_movimiento = mov
+            elif puntaje == mejor_puntaje and random.random() < 0.5:
                 mejor_movimiento = mov
 
         return mejor_puntaje, mejor_movimiento
-    
-# ====================== BUCLE PRINCIPAL CON DEBUG ======================
+
+    else:
+        mejor_puntaje = float('inf')
+        mejor_movimiento = None
+        movimientos = obtener_movimientos_validos(coord_gato[0], coord_gato[1], tablero)
+
+        for mov in movimientos:
+            tablero_copia = copy.deepcopy(tablero)
+            tablero_copia[coord_gato[0]][coord_gato[1]] = "|__|"
+            tablero_copia[mov[0]][mov[1]] = "|🐱|"
+            
+            puntaje, _ = minimax(tablero_copia, coord_raton, mov, coord_queso, coord_salida, profundidad-1, True)
+            
+            if puntaje < mejor_puntaje:
+                mejor_puntaje = puntaje
+                mejor_movimiento = mov
+            elif puntaje == mejor_puntaje and random.random() < 0.5:
+                mejor_movimiento = mov
+
+        return mejor_puntaje, mejor_movimiento
+
+
 tablero=[]          #se crea la lista quue va a guardar el tablero donde se desarrolla la partida
-x_de_tablero=random.randint(5,20)       #se define la cantidad de filas aleatoriamenten
-y_de_tablero=random.randint(5,20)       #se define la cantidad de columnas aleatoriamente
+#x_de_tablero=random.randint(5,20)       #se define la cantidad de filas aleatoriamenten
+#y_de_tablero=random.randint(5,20)       #se define la cantidad de columnas aleatoriamente
+
 turno=0                             # se inicializa el contador de turnos
-TURNO_MAX = 2000                     # se define la constante de maxima cantidad de turnos
-x_de_tablero=int(input("Ingrese ancho de laberinto: "))
-y_de_tablero=int(input("Ingrese alto de laberinto: "))
-coord_raton=[0,0]                   #se define la coordenada inicial del raton
-coord_gato=[x_de_tablero-1,y_de_tablero-1]  #se define la coordenada inicial del gato en el final del tablero
-coord_queso=[x_de_tablero//2,y_de_tablero//2]   #se define la coordenada del queso aproximadamente a mitad del tablero
-coord_salida=[0,y_de_tablero-1]         #se define la salida del tablero en la esquina superior derecha del tablero
+TURNO_MAX = 35                     # se define la constante de maxima cantidad de turnos
+PROFUNDIDAD = 5
+x_de_tablero=int(input("Ingrese alto de laberinto: "))
+y_de_tablero=int(input("Ingrese ancho de laberinto: "))
+coord_raton = [0, 0]
+coord_gato = [x_de_tablero-1, y_de_tablero-1]
+coord_queso = [x_de_tablero//2, y_de_tablero//2]
+coord_salida = [0, y_de_tablero-1]
+
 generar_tablero(x_de_tablero, y_de_tablero, tablero, True, coord_raton, coord_gato, coord_queso, coord_salida)
 mostrar_tablero(x_de_tablero, y_de_tablero, tablero)
-profundidad = 5
+
+turno = 0
+
 while turno < TURNO_MAX:
-    #time.sleep(1.0)
-
-    #print(f"\n--- Turno {turno + 1} ---")
-
-    # Turno del Ratón
-    puntaje_r, mejor_mov_raton = minimax(tablero, coord_raton, coord_gato, coord_queso, coord_salida, profundidad, True)
-    print(f"Ratón - Puntaje: {puntaje_r} | Movimiento: {mejor_mov_raton}")
-
+    _, mejor_mov_raton = minimax(tablero, coord_raton, coord_gato, coord_queso, coord_salida, PROFUNDIDAD, True)
+    
     if mejor_mov_raton:
-        nx = mejor_mov_raton[0]
-        ny = mejor_mov_raton[1]
         tablero[coord_raton[0]][coord_raton[1]] = "|__|"
-        tablero[nx][ny] = "|🐭|"
-        coord_raton = [nx, ny]
-        print(f"   Ratón se movió a {coord_raton}")
-    else:
-        print("   Ratón: NO se pudo mover (None)")
+        tablero[mejor_mov_raton[0]][mejor_mov_raton[1]] = "|🐭|"
+        coord_raton = mejor_mov_raton[:]
 
-    # Turno del Gato
-    puntaje_g, mejor_mov_gato = minimax(tablero, coord_raton, coord_gato, coord_queso, coord_salida, profundidad, False)
-    print(f"Gato  - Puntaje: {puntaje_g} | Movimiento: {mejor_mov_gato}")
-
+    _, mejor_mov_gato = minimax(tablero, coord_raton, coord_gato, coord_queso, coord_salida, PROFUNDIDAD, False)
+    
     if mejor_mov_gato:
-        nx = mejor_mov_gato[0]
-        ny = mejor_mov_gato[1]
         tablero[coord_gato[0]][coord_gato[1]] = "|__|"
-        tablero[nx][ny] = "|🐱|"
-        coord_gato = [nx, ny]
-        print(f"   Gato se movió a {coord_gato}")
-    else:
-        print("   Gato: NO se pudo mover (None)")
+        tablero[mejor_mov_gato[0]][mejor_mov_gato[1]] = "|🐱|"
+        coord_gato = mejor_mov_gato[:]
 
     mostrar_tablero(x_de_tablero, y_de_tablero, tablero)
     turno += 1
-    print(f"turno: {turno}")
 
-    if juego_terminado(coord_raton, coord_gato, coord_salida):
-        if coord_gato == coord_raton:
-            print("¡El gato atrapó al ratón!")
+    terminado, ganador = juego_terminado(coord_raton, coord_gato, coord_salida)
+    if terminado:
+        if ganador == "gato":
+            print("\n¡EL GATO ATRAPÓ AL RATÓN! 🐱")
         else:
-            print("¡El ratón escapó por la salida!")
+            print("\n¡EL RATÓN ESCAPÓ POR LA SALIDA! 🐭")
         break
+else:
+    print(f"\n¡El ratón sobrevivió {turno} turnos! El gato no logró atraparlo.")
+
+print(f"Juego terminado después de {turno} turnos.")
