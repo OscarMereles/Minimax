@@ -18,6 +18,6 @@ Hice un simulador donde un gato y un ratón se persiguen en un tablero con obst�
 - Me peleé mucho con las evaluaciones del gato y el ratón.
 
 ### Mi mejor "¡Ajá!" del proceso:
-Fueron un par de momentos:
--Entender que si queria que se moviera tambien en diagonal, no debia usar la distancia Manhattan, sino la distancia Chebyshev.
--Entender que **no hace falta mucha profundidad**, sino que **la función de evaluación es más importante**. Cuando ajusté los números de las puntuaciones, el comportamiento del ratón y del gato mejoró muchísimo de un momento a otro.
+- Fueron un par de momentos:
+- Entender que si queria que se moviera tambien en diagonal, no debia usar la distancia Manhattan, sino la distancia Chebyshev.
+- Entender que **no hace falta mucha profundidad**, sino que **la función de evaluación es más importante**. Cuando ajusté los números de las puntuaciones, el comportamiento del ratón y del gato mejoró muchísimo de un momento a otro.
