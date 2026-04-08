@@ -58,7 +58,7 @@ def movimiento_random(animal,coord,tablero):    #funcion experimental para gener
     else:                                                                   #en caso que no haya movimientos disponibles desde esa coordenada 
         print("sin movimientos disponibles")                                #imprime mensaje de sin movimientos disponibles
 
-def evaluar_raton(coord_raton, coord_queso, coord_gato, coord_salida, tablero):
+def evaluar_raton(coord_raton, coord_queso, coord_gato, coord_salida, tablero):        #funcion que evalua el puntaje del raton
     dist_gato = distancia_chebyshev(coord_raton, coord_gato)
     dist_queso = distancia_chebyshev(coord_raton, coord_queso)
     dist_salida = distancia_chebyshev(coord_raton, coord_salida)
@@ -68,7 +68,7 @@ def evaluar_raton(coord_raton, coord_queso, coord_gato, coord_salida, tablero):
     else:
         return (dist_gato * 25) - (dist_salida * 38)
 
-def evaluar_gato(coord_gato, coord_raton, coord_queso, coord_salida, tablero):
+def evaluar_gato(coord_gato, coord_raton, coord_queso, coord_salida, tablero):        #Funcion que evalua la puntuacion del raton
     dist_raton = distancia_chebyshev(coord_gato, coord_raton)
     dist_queso = distancia_chebyshev(coord_gato, coord_queso)
     dist_salida = distancia_chebyshev(coord_gato, coord_salida)
@@ -78,14 +78,14 @@ def evaluar_gato(coord_gato, coord_raton, coord_queso, coord_salida, tablero):
     else:
         return (dist_raton * 26) - (dist_salida * 18)
 
-def juego_terminado(coord_raton, coord_gato, coord_salida):
+def juego_terminado(coord_raton, coord_gato, coord_salida):        #Funcion que analiza si el juego termino 
     if coord_gato==coord_raton:
         return True, "gato"
     if coord_raton== coord_salida:
         return True, "raton"
     return False, None
 
-def minimax(tablero, coord_raton, coord_gato, coord_queso, coord_salida, profundidad, turno_raton):
+def minimax(tablero, coord_raton, coord_gato, coord_queso, coord_salida, profundidad, turno_raton):        #Funcion Minimax
     terminado, ganador = juego_terminado(coord_raton, coord_gato, coord_salida)
     
     if profundidad == 0 or terminado:
